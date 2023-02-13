@@ -12,17 +12,19 @@ class LoginForm(ft.Column):
 
         self.title.value = 'Sign In'
         self.title.font_family = 'Cartis'
-        self.title.size = 40
+        self.title.size = 20
         self.title.expand = True
         self.title.text_align = ft.TextAlign.CENTER
 
         self.username_field.label = 'Username'
         self.username_field.expand = True
+        self.username_field.text_size = 12
 
         self.password_field.label = 'Password'
         self.password_field.expand = True
         self.password_field.password = True
         self.password_field.can_reveal_password = True
+        self.password_field.text_size = 12
 
         self.login_button.text = 'Sign In'
         self.login_button.icon = ft.icons.DOOR_BACK_DOOR

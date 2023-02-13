@@ -10,16 +10,19 @@ class AppBar(ft.AppBar):
         self.about_button = ft.TextButton()
 
         self.leading.name = ft.icons.BOOK
-        self.leading.size = 30
+        self.leading.size = 12
 
         self.about_button.text = 'About'
         self.about_button.icon = ft.icons.INFO
+        self.about_button.size = 12
 
         self.title.value = 'Todo Application'
         self.title.font_family = 'Roboto-Medium'
+        self.title.size = 12
 
         self.exit_button.icon = ft.icons.EXIT_TO_APP
         self.exit_button.tooltip = 'Exit'
+        self.exit_button.size = 12
 
         self.actions.append(self.about_button)
         self.actions.append(self.exit_button)

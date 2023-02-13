@@ -10,12 +10,13 @@ class TodoForm(ft.Column):
 
         self.title.value = 'Register a new todo here'
         self.title.font_family = 'Cartis'
-        self.title.size = 40
+        self.title.size = 20
         self.title.expand = True
         self.title.text_align = ft.TextAlign.CENTER
 
         self.description_field.label = 'Whats need to be done?'
         self.description_field.expand = True
+        self.description_field.text_size = 12
 
         self.add_button.icon = ft.icons.ADD
         self.add_button.shape = ft.CircleBorder()

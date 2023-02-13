@@ -9,11 +9,11 @@ class GenericSnack(ft.SnackBar):
 
         self.text.value = message
         self.text.weight = ft.FontWeight.NORMAL
-        self.text.size = 20
+        self.text.size = 14
         self.text.expand = True
 
         self.icon.name = ft.icons.PALETTE
-        self.icon.size = 30
+        self.icon.size = 14
 
         self.content.controls.append(self.icon)
         self.content.controls.append(self.text)

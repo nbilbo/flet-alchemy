@@ -13,20 +13,23 @@ class RegisterForm(ft.Column):
 
         self.title.value = 'Sign Up'
         self.title.font_family = 'Cartis'
-        self.title.size = 40
+        self.title.size = 20
         self.title.expand = True
         self.title.text_align = ft.TextAlign.CENTER
 
         self.username_field.label = 'Username'
         self.username_field.expand = True
+        self.username_field.text_size = 12
 
         self.email_field.label = 'Email'
         self.email_field.expand = True
+        self.email_field.text_size = 12
 
         self.password_field.label = 'Password'
         self.password_field.expand = True
         self.password_field.password = True
         self.password_field.can_reveal_password = True
+        self.password_field.text_size = 12
 
         self.register_button.text = 'Sign Up'
         self.register_button.icon = ft.icons.SAVE
