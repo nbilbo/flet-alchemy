@@ -11,7 +11,7 @@ class GenericDialog(ft.AlertDialog):
         self.title.value = title
         self.title.expand = True
         self.title.text_align = ft.TextAlign.CENTER
-        self.title.font_family = 'Cartis'
+        self.title.font_family = 'Akira'
         self.title.size = 30
 
         self.message.value = message

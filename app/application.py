@@ -38,10 +38,12 @@ class Application(object):
         self.page.fonts = {
             'Cartis': 'fonts/cartis_beautyful/Cartis Beautyful serif.ttf',
             'Roboto-Medium': 'fonts/roboto/Roboto-Medium.ttf',
+            'Akira': 'fonts/akira/Akira.otf',
         }
 
         # initial state.
         self.show_login_view()
+        self.set_login_form('admin', 'admin')
 
         # now, with all widgets created, we can start the controller layer.
         self.controller = Controller(self)
@@ -217,6 +219,13 @@ class Application(object):
         """Get each item in completed list."""
         listview = self.home_view.completed_tab.listview
         return listview.controls
+
+    def set_login_form(self, username: str, password: str) -> None:
+        """Set login form values."""
+        form = self.login_view.form
+        form.username_field.value = username
+        form.password_field.value = password
+        self.page.update()
 
     @property
     def login_button(self) -> ft.OutlinedButton:

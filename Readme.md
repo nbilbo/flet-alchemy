@@ -2,7 +2,7 @@
 
 ## Using flet and SQLALquemy
 
-Hello, in this project are used [flet](https://flet.dev/) to build the <strong>graphical interface</strong> and [SQLAlchemy](https://www.sqlalchemy.org/) to <strong>manage the database</strong>.
+Hello, in this project is used [flet](https://flet.dev/) to build the <strong>graphical interface</strong> and [SQLAlchemy](https://www.sqlalchemy.org/) to <strong>manage the database</strong>.
 Here, each user will have your own list of items where you can insert, update and delete.
 
 ### How run?

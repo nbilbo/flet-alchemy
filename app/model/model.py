@@ -14,6 +14,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
 
 # local.
+from app import constants
 from app.model.exceptions import EmailAlreadyRegistered
 from app.model.exceptions import MissingField
 from app.model.exceptions import UsernameAlreadyRegistered
@@ -40,12 +41,21 @@ class Todo(Base):
 
 
 class Model(object):
-    def __init__(self, db_name: str) -> None:
+    def __init__(self) -> None:
         """Manage the models."""
-        self.engine = create_engine(f'sqlite:///{db_name}')
+        self.engine = create_engine(f'sqlite:///{constants.DB_NAME}')
         Base.metadata.create_all(bind=self.engine)
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
+        self._create_default_user()
+
+    def _create_default_user(self) -> None:
+        if not self.select_user(username='admin'):
+            user = User(
+                username=constants.DEFAULT_USERNAME,
+                password=constants.DEFAULT_PASSWORD,
+            )
+            self.insert_user(user)
 
     def insert_user(self, user: User) -> None:
         if user.username is None or user.password is None:

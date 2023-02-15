@@ -13,7 +13,8 @@ class CompletedItem(ft.Row):
         self.text.expand = True
         self.text.text_align = ft.TextAlign.CENTER
         self.text.font_family = 'Roboto-Medium'
-        self.text.size = 12
+        self.text.weight = ft.FontWeight.BOLD
+        self.text.size = 14
 
         self.incomplete_button.text = 'Incomplete'
         self.incomplete_button.icon = ft.icons.CANCEL

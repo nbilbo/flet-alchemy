@@ -2,7 +2,6 @@
 import typing
 
 # local.
-from app import constants
 from app.components.items.completed_item import CompletedItem
 from app.components.items.incompleted_item import IncompletedItem
 from app.model.exceptions import EmailAlreadyRegistered
@@ -20,7 +19,7 @@ class Controller(object):
     def __init__(self, application: 'Application') -> None:
         """Manage application widgets and start the Model layer."""
         self.application = application
-        self.model = Model(constants.DB_NAME)
+        self.model = Model()
         self.user = None
 
         self.application.login_button.on_click = (
@@ -121,7 +120,12 @@ class Controller(object):
 
     def exit_action(self) -> None:
         """When exit button has clicked."""
-        self.user = None
+        if self.user is not None:
+            self.application.set_login_form(
+                self.user.username, self.user.password
+            )
+            self.user = None
+
         self.application.show_login_view()
         self.application.hide_banner()
 

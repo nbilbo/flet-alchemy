@@ -17,7 +17,7 @@ class AppBar(ft.AppBar):
         self.about_button.size = 12
 
         self.title.value = 'Todo Application'
-        self.title.font_family = 'Roboto-Medium'
+        self.title.font_family = 'Akira'
         self.title.size = 12
 
         self.exit_button.icon = ft.icons.EXIT_TO_APP
