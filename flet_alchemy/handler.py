@@ -97,9 +97,9 @@ class Handler:
             # 4) fourth, lets show the home view.
             self.user = user
             self.refresh_todo_list()
+            self.application.show_home_view()
             self.application.focus_todo_form()
             self.application.focus_incompleted_tab()
-            self.application.show_home_view()
             self.application.display_success_snack(f'Welcome {username}')
 
         # ops, some required field is not informed, lets give a feedback.

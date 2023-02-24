@@ -242,6 +242,7 @@ class Application:
         """This class will grab all others widgets."""
         # 1), first we create all the widgets.
         self.page = page
+        self.page.title = 'Flet-Alchemy'
         self.login_view = LoginView()
         self.register_view = RegisterView()
         self.home_view = HomeView()
