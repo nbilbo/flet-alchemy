@@ -17,7 +17,7 @@ Flet-Alchemy provides the following features:
 ## Getting Started
 To get started with Flet-Alchemy, follow these steps:
 1. Clone the repository: `git clone https://github.com/nbilbo/flet-alchemy.git`
-2. Go to project directory `cd fley-alchemy`
+2. Go to project directory `cd flet-alchemy`
 3. Install the dependencies: `pip install -r requirements.txt`
 4. Run the application: `python main.py`
 
