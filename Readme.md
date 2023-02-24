@@ -1,4 +1,4 @@
-# Flet-Alquemy
+# Flet-Alchemy
 
 Flet-Alchemy is a program for registering user tasks. Each user has their own tasks that can be viewed, updated, and deleted. The program also includes an authentication screen, registration screen, and home screen.
 
