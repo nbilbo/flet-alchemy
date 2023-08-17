@@ -127,6 +127,7 @@ class SuccessSnackBar(ft.SnackBar):
 class LoginView(ft.View):
     def __init__(self) -> None:
         super().__init__()
+        self.route = '/login'
         self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
         self.title = ft.Text()
@@ -174,6 +175,7 @@ class LoginView(ft.View):
 class RegisterView(LoginView):
     def __init__(self) -> None:
         super().__init__()
+        self.route = '/register'
         self.title.value = 'Register'
         self.login_button, self.register_button = (
             self.register_button,
@@ -186,6 +188,7 @@ class RegisterView(LoginView):
 class HomeView(ft.View):
     def __init__(self) -> None:
         super().__init__()
+        self.route = '/home'
         self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.appbar = ApplicationAppBar()
 
@@ -243,36 +246,45 @@ class Application:
         # 1), first we create all the widgets.
         self.page = page
         self.page.title = 'Flet-Alchemy'
+        self.page.on_route_change = self.route_change
+
         self.login_view = LoginView()
         self.register_view = RegisterView()
         self.home_view = HomeView()
+
+        self.views: Dict[str, ft.View] = {
+            self.login_view.route: self.login_view,
+            self.register_view.route: self.register_view,
+            self.home_view.route: self.home_view,
+        }
 
         # 2) now, after widgets created, we can configure their events.
         # and start the database.
         self.handler = Handler(self)
 
         # 3) setting the initial state.
-        self.show_register_view()
-        self.show_home_view()
         self.show_login_view()
         self.set_login_form(
             constants.DEFAULT_USERNAME, constants.DEFAULT_PASSWORD
         )
 
-    def show_login_view(self) -> None:
+    def route_change(self, _event: ft.RouteChangeEvent) -> None:
+        template_route = ft.TemplateRoute(self.page.route)
         self.page.views.clear()
-        self.page.views.append(self.login_view)
-        self.page.update()
+
+        for route, view in self.views.items():
+            if template_route.match(route):
+                self.page.views.append(view)
+                break
+
+    def show_login_view(self) -> None:
+        self.page.go(self.login_view.route)
 
     def show_register_view(self) -> None:
-        self.page.views.clear()
-        self.page.views.append(self.register_view)
-        self.page.update()
+        self.page.go(self.register_view.route)
 
     def show_home_view(self) -> None:
-        self.page.views.clear()
-        self.page.views.append(self.home_view)
-        self.page.update()
+        self.page.go(self.home_view.route)
 
     def display_login_form_error(self, field: str, message: str) -> None:
         username_field = self.login_view.username_field
@@ -298,13 +310,13 @@ class Application:
             self.page.update()
 
     def display_success_snack(self, message: str) -> None:
-        self.page.snack_bar = SuccessSnackBar(message)
-        self.page.snack_bar.open = True
+        snack_bar = SuccessSnackBar(message)
+        self.page.show_snack_bar(snack_bar)
         self.page.update()
 
     def display_warning_banner(self, message: str) -> None:
-        self.page.banner = WarningBanner(self.page, message)
-        self.page.banner.open = True
+        banner = WarningBanner(self.page, message)
+        self.page.show_banner(banner)
         self.page.update()
 
     def focus_todo_form(self) -> None:
@@ -444,3 +456,7 @@ class Application:
     @property
     def add_todo_button(self) -> ft.IconButton:
         return self.home_view.add_todo_button
+
+    @property
+    def description_field(self) -> ft.TextField:
+        return self.home_view.description_field

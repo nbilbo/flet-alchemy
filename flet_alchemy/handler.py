@@ -43,6 +43,9 @@ class Handler:
         self.application.add_todo_button.on_click = (
             lambda e: self.add_todo_click()
         )
+        self.application.description_field.on_submit = (
+            lambda e: self.add_todo_click()
+        )
 
     def login_click(self) -> None:
         """Will try login the user."""
