@@ -1,140 +1,102 @@
-"""
-This is or view layer.
-"""
-# python
+from typing import Any
 from typing import Dict
 from typing import List
 from typing import Optional
 
-# 3rd
 import flet as ft
 
-# local
-from flet_alchemy import constants
-from flet_alchemy.handler import Handler
 from flet_alchemy.model import Todo
 
 
-class ApplicationAppBar(ft.AppBar):
+class AuthAppBar(ft.AppBar):
     def __init__(self) -> None:
         super().__init__()
+        self.toolbar_height = 75
+
+        self.leading = ft.IconButton()
+        self.leading.icon = ft.icons.SCIENCE
 
         self.title = ft.Text()
         self.title.value = 'Flet Alchemy'
-        self.leading = self.title
 
-        self.logout_button = ft.IconButton()
-        self.logout_button.icon = ft.icons.LOGOUT
-        self.logout_button.tooltip = 'Logout'
-        self.actions.append(self.logout_button)
+        self.toggle_theme_button = ft.IconButton()
+        self.toggle_theme_button.icon = ft.icons.DARK_MODE
 
+        self.login_button = ft.TextButton()
+        self.login_button.text = 'Login'
+        self.login_button.icon = ft.icons.LOGIN_OUTLINED
 
-class IncompletedItem(ft.Row):
-    def __init__(self, primary_key: int, description: str) -> None:
-        super().__init__()
-        self.primary_key = primary_key
+        self.register_button = ft.TextButton()
+        self.register_button.text = 'Register'
+        self.register_button.icon = ft.icons.EDIT_OUTLINED
 
-        self.description = ft.Text()
-        self.description.value = description
-        self.description.text_align = ft.TextAlign.CENTER
-        self.description.expand = True
-
-        self.complete_button = ft.IconButton()
-        self.complete_button.icon = ft.icons.CHECK
-        self.complete_button.tooltip = 'Complete'
-        self.complete_button.icon_color = ft.colors.GREEN
-
-        self.delete_button = ft.IconButton()
-        self.delete_button.icon = ft.icons.DELETE
-        self.delete_button.tooltip = 'Delete'
-        self.delete_button.icon_color = ft.colors.RED
-
-        self.controls.append(self.description)
-        self.controls.append(self.complete_button)
-        self.controls.append(self.delete_button)
+        self.actions.append(self.login_button)
+        self.actions.append(self.register_button)
+        self.actions.append(self.toggle_theme_button)
 
 
-class CompletedItem(ft.Row):
-    def __init__(self, primary_key: int, description: str) -> None:
-        super().__init__()
-        self.primary_key = primary_key
-
-        self.description = ft.Text()
-        self.description.value = description
-        self.description.text_align = ft.TextAlign.CENTER
-        self.description.expand = True
-
-        self.incomplete_button = ft.IconButton()
-        self.incomplete_button.icon = ft.icons.CANCEL
-        self.incomplete_button.tooltip = 'Incomplete'
-        self.incomplete_button.icon_color = ft.colors.AMBER
-
-        self.delete_button = ft.IconButton()
-        self.delete_button.icon = ft.icons.DELETE
-        self.delete_button.tooltip = 'Delete'
-        self.delete_button.icon_color = ft.colors.RED
-
-        self.controls.append(self.description)
-        self.controls.append(self.incomplete_button)
-        self.controls.append(self.delete_button)
-
-
-class WarningBanner(ft.Banner):
-    def __init__(self, page: ft.Page, message: str) -> None:
-        super().__init__()
-        self.page = page
-        self.bgcolor = ft.colors.RED
-
-        self.message = ft.Text()
-        self.message.value = message
-        self.message.text_align = ft.TextAlign.CENTER
-        self.message.color = ft.colors.WHITE
-        self.message.expand = True
-
-        self.leading = ft.Icon()
-        self.leading.name = ft.icons.DANGEROUS
-        self.leading.color = ft.colors.WHITE
-
-        self.close_button = ft.IconButton()
-        self.close_button.icon = ft.icons.CLOSE
-        self.close_button.icon_color = ft.colors.WHITE
-        self.close_button.on_click = lambda e: self.close()
-        self.actions.append(self.close_button)
-
-        self.content = ft.Row()
-        self.content.controls.append(self.message)
-
-    def close(self) -> None:
-        self.page.banner.open = False
-        self.page.update()
-
-
-class SuccessSnackBar(ft.SnackBar):
-    def __init__(self, message: str) -> None:
-        super().__init__(content=ft.Row())
-        self.bgcolor = ft.colors.GREEN
-
-        self.message = ft.Text()
-        self.message.value = message
-        self.message.text_align = ft.TextAlign.CENTER
-        self.message.color = ft.colors.WHITE
-        self.message.size = 20
-        self.message.expand = True
-
-        self.content.controls.append(self.message)
-
-
-class LoginView(ft.View):
+class GeneralAppBar(ft.AppBar):
     def __init__(self) -> None:
         super().__init__()
-        self.route = '/login'
-        self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+        self.toolbar_height = 75
+
+        self.leading = ft.IconButton()
+        self.leading.icon = ft.icons.SCIENCE
 
         self.title = ft.Text()
-        self.title.value = 'Login'
-        self.title.style = ft.TextThemeStyle.DISPLAY_MEDIUM
+        self.title.value = 'Flet Alchemy'
+
+        self.logout_button = ft.TextButton()
+        self.logout_button.text = 'Logout'
+        self.logout_button.icon = ft.icons.LOGOUT
+
+        self.toggle_theme_button = ft.IconButton()
+        self.toggle_theme_button.icon = ft.icons.DARK_MODE
+
+        self.actions.append(self.logout_button)
+        self.actions.append(self.toggle_theme_button)
+
+
+class AuthView(ft.View):
+    def __init__(self) -> None:
+        super().__init__()
+        self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+        self.appbar = AuthAppBar()
+
+        self.title = ft.Text()
+        self.title.theme_style = ft.TextThemeStyle.DISPLAY_LARGE
         self.title.text_align = ft.TextAlign.CENTER
-        self.title.expand = True
+
+        self.content = ft.Column()
+        self.content.controls.append(self.title)
+        self.content.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+        self.container = ft.Container(self.content)
+        self.container.border = ft.border.all(5, ft.colors.TRANSPARENT)
+        self.container.width = 600
+        self.controls.append(self.container)
+
+
+class GeneralView(ft.View):
+    def __init__(self) -> None:
+        super().__init__()
+        self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+        self.appbar = GeneralAppBar()
+        self.content = ft.Column()
+
+        self.container = ft.Container(self.content)
+        self.container.width = 600
+        self.container.border = ft.border.all(5, ft.colors.TRANSPARENT)
+        self.container.expand = True
+        self.controls.append(self.container)
+
+
+class LoginUserView(AuthView):
+    def __init__(self) -> None:
+        super().__init__()
+        self.route = '/auth/login'
+        self.appbar.login_button.icon = ft.icons.LOGIN
+        self.title.value = 'Login'
 
         self.username_field = ft.TextField()
         self.username_field.label = 'Username'
@@ -147,316 +109,388 @@ class LoginView(ft.View):
         self.password_field.expand = True
 
         self.login_button = ft.OutlinedButton()
-        self.login_button.text = 'Sign In'
-        self.login_button.icon = ft.icons.LOGIN
+        self.login_button.text = 'Login'
         self.login_button.expand = True
 
-        self.register_button = ft.TextButton()
-        self.register_button.text = "Don' Have An Account? Sign Up"
-        self.register_button.icon = ft.icons.ARROW_FORWARD
+        self.dont_account_button = ft.TextButton()
+        self.dont_account_button.text = 'Don\'t have an account? click here'
+        self.dont_account_button.expand = True
+
+        self.content.controls.append(ft.Row([self.username_field]))
+        self.content.controls.append(ft.Row([self.password_field]))
+        self.content.controls.append(ft.Row([self.login_button]))
+        self.content.controls.append(ft.Row([self.dont_account_button]))
+
+
+class RegisterUserView(AuthView):
+    def __init__(self) -> None:
+        super().__init__()
+        self.route = '/auth/register'
+        self.appbar.register_button.icon = ft.icons.EDIT
+        self.title.value = 'Register'
+
+        self.username_field = ft.TextField()
+        self.username_field.label = 'Username'
+        self.username_field.expand = True
+
+        self.password_field = ft.TextField()
+        self.password_field.label = 'Password'
+        self.password_field.password = True
+        self.password_field.can_reveal_password = True
+        self.password_field.expand = True
+
+        self.register_button = ft.OutlinedButton()
+        self.register_button.text = 'Register'
         self.register_button.expand = True
 
-        content = ft.Column()
-        content.width = 400
-        content.alignment = ft.MainAxisAlignment.CENTER
-        content.controls.append(ft.Row([self.title]))
-        content.controls.append(ft.Row([self.username_field]))
-        content.controls.append(ft.Row([self.password_field]))
-        content.controls.append(ft.Row([self.login_button]))
-        content.controls.append(ft.Row([self.register_button]))
+        self.already_account_button = ft.TextButton()
+        self.already_account_button.text = 'Already have an account? click here'
+        self.already_account_button.expand = True
 
-        container = ft.Container()
-        container.content = content
-        container.border = ft.border.all(1, ft.colors.TRANSPARENT)
-        container.expand = True
-        self.controls.append(container)
+        self.content.controls.append(ft.Row([self.username_field]))
+        self.content.controls.append(ft.Row([self.password_field]))
+        self.content.controls.append(ft.Row([self.register_button]))
+        self.content.controls.append(ft.Row([self.already_account_button]))
 
 
-class RegisterView(LoginView):
+class HomeView(GeneralView):
     def __init__(self) -> None:
         super().__init__()
-        self.route = '/register'
-        self.title.value = 'Register'
-        self.login_button, self.register_button = (
-            self.register_button,
-            self.login_button,
-        )
-        self.register_button.text = 'Sign Up'
-        self.login_button.text = 'Already Have An Account? Sign in'
-
-
-class HomeView(ft.View):
-    def __init__(self) -> None:
-        super().__init__()
-        self.route = '/home'
-        self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-        self.appbar = ApplicationAppBar()
+        self.route = '/'
 
         self.description_field = ft.TextField()
         self.description_field.label = 'What need to be done?'
         self.description_field.expand = True
 
-        self.add_todo_button = ft.IconButton()
-        self.add_todo_button.icon = ft.icons.ADD
-        self.add_todo_button.tooltip = 'Add'
+        self.register_button = ft.FloatingActionButton()
+        self.register_button.icon = ft.icons.ADD
 
-        self.incompleted_listview = ft.ListView()
-        self.incompleted_listview.spacing = 20
-        self.incompleted_listview.expand = True
+        self.incompleted_tab = IncompletedTab()
+        self.completed_tab = CompletedTab()
 
-        self.completed_listview = ft.ListView()
-        self.completed_listview.spacing = 20
-        self.completed_listview.expand = True
+        self.tabs = ft.Tabs()
+        self.tabs.tabs.append(self.incompleted_tab)
+        self.tabs.tabs.append(self.completed_tab)
+        self.tabs.animation_duration = 350
+        self.tabs.expand = True
 
-        self.incompleted_tab = ft.Tab()
-        self.incompleted_tab.text = 'Incompleted'
-        self.incompleted_tab.icon = ft.icons.CANCEL
-        self.incompleted_tab.content = self.incompleted_listview
-        self.incompleted_tab.content.expand = True
+        self.content.controls.append(ft.Row([self.description_field, self.register_button]))
+        self.content.controls.append(self.tabs)
 
-        self.completed_tab = ft.Tab()
-        self.completed_tab.text = 'Completed'
-        self.completed_tab.icon = ft.icons.CHECK
-        self.completed_tab.content = self.completed_listview
-        self.completed_tab.content.expand = True
 
-        self.tabs_container = ft.Tabs()
-        self.tabs_container.animation_duration = 500
-        self.tabs_container.tabs.append(self.incompleted_tab)
-        self.tabs_container.tabs.append(self.completed_tab)
-        self.tabs_container.expand = True
+class IncompletedTab(ft.Tab):
+    def __init__(self) -> None:
+        super().__init__()
+        self.text = 'Incompleted'
+        self.icon = ft.icons.CHECK_BOX_OUTLINE_BLANK
 
-        content = ft.Column()
-        content.width = 600
-        content.controls.append(
-            ft.Row([self.description_field, self.add_todo_button])
-        )
-        content.controls.append(self.tabs_container)
+        self.list_view = ft.ListView()
+        self.list_view.spacing = 25
+        self.content = self.list_view
 
-        container = ft.Container()
-        container.content = content
-        container.border = ft.border.all(1, ft.colors.TRANSPARENT)
-        container.expand = True
-        self.controls.append(container)
+
+class CompletedTab(ft.Tab):
+    def __init__(self) -> None:
+        super().__init__()
+        self.text = 'Completed'
+        self.icon = ft.icons.CHECK_BOX_OUTLINED
+
+        self.list_view = ft.ListView()
+        self.list_view.spacing = 25
+        self.content = self.list_view
+
+
+class TodoPreview(ft.UserControl):
+    def __init__(self) -> None:
+        super().__init__()
+        self.id_todo: Optional[int] = None
+
+        self.description = ft.Text()
+        self.description.theme_style = ft.TextThemeStyle.BODY_LARGE
+        self.description.text_align = ft.TextAlign.CENTER
+        self.description.expand = True
+
+        self.toggle_completed_button = ft.IconButton()
+        self.toggle_completed_button.icon = ft.icons.CHECK_BOX
+
+        self.delete_button = ft.IconButton()
+        self.delete_button.icon = ft.icons.DELETE
+        self.delete_button.icon_color = ft.colors.RED
+        
+        self.content = ft.Column()
+        self.content.controls.append(ft.Row([self.delete_button, self.description, self.toggle_completed_button]))
+        self.container = ft.Container(self.content)
+
+    def build(self) -> ft.Container:
+        return self.container
+
+
+class WarningBanner(ft.Banner):
+    def __init__(self, page: ft.Page, message: str) -> None:
+        super().__init__()
+        self.message = ft.Text()
+        self.message.value = message
+        self.message.theme_style = ft.TextThemeStyle.BODY_LARGE
+        self.message.selectable = True
+        self.message.expand = True
+
+        self.icon = ft.Icon()
+        self.icon.name = ft.icons.WARNING
+
+        self.close_button = ft.TextButton()
+        self.close_button.text = 'Close'
+        self.close_button.icon = ft.icons.CLOSE
+        self.close_button.on_click = lambda _event: page.close_banner()
+
+        self.content = ft.Column()
+        self.content.controls.append(ft.Row([self.icon, self.message]))
+        self.actions.append(self.close_button)
+
+
+class InfoSnackBar(ft.SnackBar):
+    def __init__(self, message: str) -> None:
+        super().__init__(content=ft.Row())
+        self.bgcolor = ft.colors.TRANSPARENT
+
+        self.message = ft.Text()
+        self.message.value = message
+        self.message.theme_style = ft.TextThemeStyle.BODY_LARGE
+        self.message.expand = True
+
+        self.icon = ft.Icon()
+        self.icon.name = ft.icons.INFO
+
+        self.content.controls.append(self.icon)
+        self.content.controls.append(self.message)
 
 
 class Application:
     def __init__(self, page: ft.Page) -> None:
-        """This class will grab all others widgets."""
-        # 1), first we create all the widgets.
         self.page = page
-        self.page.title = 'Flet-Alchemy'
-        self.page.on_route_change = self.route_change
-
-        self.login_view = LoginView()
-        self.register_view = RegisterView()
+        self.page.on_route_change = self.__route_change
+        self.page.window_width = self.page.window_height = 500
+        self.page.title = 'Flet Alchemy'
+        
         self.home_view = HomeView()
+        self.general_views: List[GeneralView] = [self.home_view]
 
-        self.views: Dict[str, ft.View] = {
-            self.login_view.route: self.login_view,
-            self.register_view.route: self.register_view,
-            self.home_view.route: self.home_view,
-        }
+        self.login_user_view = LoginUserView()
+        self.register_user_view = RegisterUserView()
+        self.auth_views: List[AuthView] = [self.login_user_view, self.register_user_view]
 
-        # 2) now, after widgets created, we can configure their events.
-        # and start the database.
-        self.handler = Handler(self)
+        self.go_to_login_user_view()
+        self.active_dark_theme_mode()
 
-        # 3) setting the initial state.
-        self.show_login_view()
-        self.set_login_form(
-            constants.DEFAULT_USERNAME, constants.DEFAULT_PASSWORD
-        )
+        # debug.
+        # self.go_to_home_view()
+        # self.active_light_theme_mode()
+        # self.show_info_snack_bar('vsf')
 
-    def route_change(self, _event: ft.RouteChangeEvent) -> None:
+    def go_to_login_user_view(self) -> None:
+        self.page.go(self.login_user_view.route)
+
+    def go_to_register_user_view(self) -> None:
+        self.page.go(self.register_user_view.route)
+
+    def go_to_home_view(self) -> None:
+        self.page.go(self.home_view.route)
+
+    def active_dark_theme_mode(self) -> None:
+        for view in self.auth_views:
+            view.appbar.toggle_theme_button.icon = ft.icons.LIGHT_MODE
+
+        for view in self.general_views:
+            view.appbar.toggle_theme_button.icon = ft.icons.LIGHT_MODE
+
+        self.page.theme_mode = ft.ThemeMode.DARK
+        self.page.update()
+
+    def active_light_theme_mode(self) -> None:
+        for view in self.auth_views:
+            view.appbar.toggle_theme_button.icon = ft.icons.DARK_MODE
+
+        for view in self.general_views:
+            view.appbar.toggle_theme_button.icon = ft.icons.DARK_MODE
+
+        self.page.theme_mode = ft.ThemeMode.LIGHT
+        self.page.update()
+
+    def toggle_theme_mode(self) -> None:
+        match(self.page.theme_mode):
+            case ft.ThemeMode.DARK:
+                self.active_light_theme_mode()
+            case ft.ThemeMode.LIGHT:
+                self.active_dark_theme_mode()
+
+    def show_warning_banner(self, message: str) -> None:
+        banner = WarningBanner(self.page, message)
+        self.page.show_banner(banner)
+
+    def show_info_snack_bar(self, message: str) -> None:
+        snack = InfoSnackBar(message)
+        self.page.show_snack_bar(snack)
+
+    def close_banner(self) -> None:
+        self.page.close_banner()
+
+    def clear_login_user_error_text(self) -> None:
+        for field in self.__get_login_user_fields().values():
+            field.error_text = ''
+        self.page.update()
+
+    def clear_register_user_error_text(self) -> None:
+        for field in self.__get_register_user_fields().values():
+            field.error_text = ''
+        self.page.update()
+
+    def clear_register_todo_error_text(self) -> None:
+        for field in self.__get_register_todo_fields().values():
+            field.error_text = ''
+        self.page.update()
+
+    def clear_login_user_fields(self) -> None:
+        for field in self.__get_login_user_fields().values():
+            field.value = ''
+        self.page.update()
+
+    def clear_register_user_fields(self) -> None:
+        for field in self.__get_register_user_fields().values():
+            field.value = ''
+        self.page.update()
+
+    def clear_register_todo_fields(self) -> None:
+        for field in self.__get_register_todo_fields().values():
+            field.value = ''
+        self.page.update()
+
+    def clear_auth_views(self) -> None:
+        self.clear_login_user_fields()
+        self.clear_register_user_fields()
+
+        self.clear_login_user_error_text()
+        self.clear_register_user_error_text()
+
+    def clear_general_views(self) -> None:
+        self.clear_register_todo_fields()
+        self.clear_register_todo_error_text()
+
+    def focus_completed_todo_tab(self) -> None:
+        tabs = self.home_view.tabs.tabs
+        completed_tab = self.home_view.completed_tab
+        index = tabs.index(completed_tab)
+        self.home_view.tabs.selected_index = index
+        self.page.update()
+
+    def focus_incompleted_todo_tab(self) -> None:
+        tabs = self.home_view.tabs.tabs
+        incompleted_tab = self.home_view.incompleted_tab
+        index = tabs.index(incompleted_tab)
+        self.home_view.tabs.selected_index = index
+        self.page.update()
+
+    def get_login_user_informations(self) -> Dict[str, str]:
+        username = self.login_user_view.username_field.value
+        password = self.login_user_view.password_field.value
+
+        return {'username': username, 'password': password}
+
+    def get_register_user_informations(self) -> Dict[str, str]:
+        username = self.register_user_view.username_field.value
+        password = self.register_user_view.password_field.value
+
+        return {'username': username, 'password': password}
+
+    def get_register_todo_informations(self) -> Dict[Any, Any]:
+        description = self.home_view.description_field.value
+
+        return {'description': description, 'completed': False}
+
+    def get_completed_todos(self) ->List[TodoPreview]:
+        return self.home_view.completed_tab.list_view.controls
+
+    def get_incompleted_todos(self) ->List[TodoPreview]:
+        return self.home_view.incompleted_tab.list_view.controls
+
+    def get_todos(self) -> List[TodoPreview]:
+        return self.get_completed_todos() + self.get_incompleted_todos()
+
+    def set_login_user_error_text(self, message: str, field: str) -> None:
+        fields = self.__get_login_user_fields()
+        if field in fields.keys():
+            fields[field].error_text = message
+            self.page.update()
+
+    def set_register_user_error_text(self, message: str, field: str) -> None:
+        fields = self.__get_register_user_fields()
+        if field in fields.keys():
+            fields[field].error_text = message
+            self.page.update()
+
+    def set_register_todo_error_text(self, message: str, field: str) -> None:
+        fields = self.__get_register_todo_fields()
+        if field in fields.keys():
+            fields[field].error_text = message
+            self.page.update()
+
+    def set_completed_todos(self, todos: List[Todo]) -> None:
+        list_view = self.home_view.completed_tab.list_view
+        list_view.controls.clear()
+
+        for todo in todos:
+            preview = TodoPreview()
+            preview.id_todo = todo.id
+            preview.description.value = todo.description
+            preview.toggle_completed_button.icon = ft.icons.CHECK_BOX_OUTLINED
+            preview.toggle_completed_button.icon_color = ft.colors.AMBER
+            list_view.controls.append(preview)
+
+        self.page.update()
+
+    def set_incompleted_todos(self, todos: List[Todo]) -> None:
+        list_view = self.home_view.incompleted_tab.list_view
+        list_view.controls.clear()
+
+        for todo in todos:
+            preview = TodoPreview()
+            preview.id_todo = todo.id
+            preview.description.value = todo.description
+            preview.toggle_completed_button.icon = ft.icons.CHECK_BOX_OUTLINE_BLANK
+            preview.toggle_completed_button.icon_color = ft.colors.GREEN
+            list_view.controls.append(preview)
+
+        self.page.update()
+
+    def set_login_user_values(self, username: str, password: str) -> None:
+        self.login_user_view.username_field.value = username
+        self.login_user_view.password_field.value = password
+        self.page.update()
+
+    def __get_login_user_fields(self) -> Dict[str, ft.TextField]:
+        username_field = self.login_user_view.username_field
+        password_field = self.login_user_view.password_field
+
+        return {'username': username_field, 'password': password_field}
+
+    def __get_register_user_fields(self) -> Dict[str, ft.TextField]:
+        username_field = self.register_user_view.username_field
+        password_field = self.register_user_view.password_field
+
+        return {'username': username_field, 'password': password_field}
+    
+    def __get_register_todo_fields(self) -> Dict[Any, Any]:
+        description_field = self.home_view.description_field
+
+        return {'description': description_field}
+
+    def __route_change(self, _route: ft.RouteChangeEvent) -> None:
         template_route = ft.TemplateRoute(self.page.route)
         self.page.views.clear()
 
-        for route, view in self.views.items():
-            if template_route.match(route):
-                self.page.views.append(view)
-                break
+        if template_route.match(self.login_user_view.route):
+            self.page.views.append(self.login_user_view)
 
-    def show_login_view(self) -> None:
-        self.page.go(self.login_view.route)
+        elif template_route.match(self.register_user_view.route):
+            self.page.views.append(self.register_user_view)
 
-    def show_register_view(self) -> None:
-        self.page.go(self.register_view.route)
-
-    def show_home_view(self) -> None:
-        self.page.go(self.home_view.route)
-
-    def display_login_form_error(self, field: str, message: str) -> None:
-        username_field = self.login_view.username_field
-        password_field = self.login_view.password_field
-        fields = {'username': username_field, 'password': password_field}
-        if field in fields.keys():
-            fields[field].error_text = message
-            self.page.update()
-
-    def display_register_form_error(self, field: str, message: str) -> None:
-        username_field = self.register_view.username_field
-        password_field = self.register_view.password_field
-        fields = {'username': username_field, 'password': password_field}
-        if field in fields.keys():
-            fields[field].error_text = message
-            self.page.update()
-
-    def display_todo_form_error(self, field: str, message: str) -> None:
-        description_field = self.home_view.description_field
-        fields = {'description': description_field}
-        if field in fields.keys():
-            fields[field].error_text = message
-            self.page.update()
-
-    def display_success_snack(self, message: str) -> None:
-        snack_bar = SuccessSnackBar(message)
-        self.page.show_snack_bar(snack_bar)
-        self.page.update()
-
-    def display_warning_banner(self, message: str) -> None:
-        banner = WarningBanner(self.page, message)
-        self.page.show_banner(banner)
-        self.page.update()
-
-    def focus_todo_form(self) -> None:
-        self.home_view.description_field.focus()
-        self.page.update()
-
-    def focus_incompleted_tab(self) -> None:
-        tabs_container = self.home_view.tabs_container
-        incompleted_tab = self.home_view.incompleted_tab
-        index = tabs_container.tabs.index(incompleted_tab)
-        tabs_container.selected_index = index
-        self.page.update()
-
-    def focus_completed_tab(self) -> None:
-        tabs_container = self.home_view.tabs_container
-        completed_tab = self.home_view.completed_tab
-        index = tabs_container.tabs.index(completed_tab)
-        tabs_container.selected_index = index
-        self.page.update()
-
-    def clear_login_form(self) -> None:
-        self.set_login_form('', '')
-
-    def clear_register_form(self) -> None:
-        self.set_register_form('', '')
-
-    def clear_todo_form(self) -> None:
-        self.set_todo_form('')
-
-    def clear_incomplete_todos(self) -> None:
-        self.set_incompleted_todos([])
-
-    def clear_complete_todos(self) -> None:
-        self.set_completed_todos([])
-
-    def hide_login_form_error(self) -> None:
-        self.login_view.username_field.error_text = None
-        self.login_view.password_field.error_text = None
-        self.page.update()
-
-    def hide_register_form_error(self) -> None:
-        self.register_view.username_field.error_text = None
-        self.register_view.password_field.error_text = None
-        self.page.update()
-
-    def hide_todo_form_error(self) -> None:
-        self.home_view.description_field.error_text = None
-        self.page.update()
-
-    def hide_banner(self) -> None:
-        if self.page.banner is not None:
-            self.page.banner.open = False
-            self.page.update()
-
-    def get_login_form(self) -> Dict[str, Optional[str]]:
-        username = str(self.login_view.username_field.value).strip()
-        password = str(self.login_view.password_field.value).strip()
-
-        return {
-            'username': username if len(username) else None,
-            'password': password if len(password) else None,
-        }
-
-    def get_register_form(self) -> Dict[str, Optional[str]]:
-        username = str(self.register_view.username_field.value).strip()
-        password = str(self.register_view.password_field.value).strip()
-
-        return {
-            'username': username if len(username) else None,
-            'password': password if len(password) else None,
-        }
-
-    def get_todo_form(self) -> Dict[str, Optional[str]]:
-        description = str(self.home_view.description_field.value).strip()
-
-        return {'description': description if len(description) else None}
-
-    def get_incompleded_items(self) -> List[IncompletedItem]:
-        listview = self.home_view.incompleted_listview
-
-        return listview.controls
-
-    def get_compleded_items(self) -> List[CompletedItem]:
-        listview = self.home_view.completed_listview
-
-        return listview.controls
-
-    def set_login_form(self, username: str, password: str) -> None:
-        self.login_view.username_field.value = username
-        self.login_view.password_field.value = password
-        self.page.update()
-
-    def set_register_form(self, username: str, password: str) -> None:
-        self.register_view.username_field.value = username
-        self.register_view.password_field.value = password
-        self.page.update()
-
-    def set_todo_form(self, description: str) -> None:
-        self.home_view.description_field.value = description
-
-    def set_incompleted_todos(self, todos: List['Todo']) -> None:
-        listview = self.home_view.incompleted_listview
-        listview.controls.clear()
-        for todo in todos:
-            item = IncompletedItem(todo.id, todo.description)
-            listview.controls.append(item)
-        self.page.update()
-
-    def set_completed_todos(self, todos: List['Todo']) -> None:
-        listview = self.home_view.completed_listview
-        listview.controls.clear()
-        for todo in todos:
-            item = CompletedItem(todo.id, todo.description)
-            listview.controls.append(item)
-        self.page.update()
-
-    @property
-    def login_button(self) -> ft.OutlinedButton:
-        return self.login_view.login_button
-
-    @property
-    def register_button(self) -> ft.OutlinedButton:
-        return self.register_view.register_button
-
-    @property
-    def already_registered_button(self) -> ft.TextButton:
-        return self.register_view.login_button
-
-    @property
-    def not_registered_button(self) -> ft.TextButton:
-        return self.login_view.register_button
-
-    @property
-    def logout_button(self) -> ft.IconButton:
-        return self.home_view.appbar.logout_button
-
-    @property
-    def add_todo_button(self) -> ft.IconButton:
-        return self.home_view.add_todo_button
-
-    @property
-    def description_field(self) -> ft.TextField:
-        return self.home_view.description_field
+        elif template_route.match(self.home_view.route):
+            self.page.views.append(self.home_view)

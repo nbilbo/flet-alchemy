@@ -1,192 +1,55 @@
-"""
-This is or model layer.
-"""
-# python
-from typing import Optional
 from typing import List
+from typing import Optional
 
-# 3rd
-from sqlalchemy import Boolean
-from sqlalchemy import Column
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
-from sqlalchemy import String
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Session
 
-# local
-from flet_alchemy import constants
+from flet_alchemy.settings import Settings
 
-
-Base = declarative_base()
+current_id_user: Optional[int] = None
 
 
-class RequiredField(Exception):
-    def __init__(self, field: str) -> None:
-        self.field = field
-        super().__init__(f'Please, the field {self.field} is required.')
-
-
-class AlreadyRegistered(Exception):
-    def __init__(self, field: str) -> None:
-        self.field = field
-        super().__init__(f'Sorry, {self.field} is already in use.')
-
-
-class NotRegistered(Exception):
+class Base(DeclarativeBase):
     pass
 
 
 class User(Base):
     __tablename__ = 'user'
 
-    id = Column(Integer, primary_key=True)
-    username = Column(String, unique=True, nullable=False)
-    password = Column(String, nullable=False)
-    todos = relationship('Todo', back_populates='user')
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str]
+    password: Mapped[str]
 
-    def __repr__(self) -> str:
-        return f'<User username: {self.username}>'
+    todos: Mapped[List['Todo']] = relationship(back_populates='user')
 
 
 class Todo(Base):
     __tablename__ = 'todo'
 
-    id = Column(Integer, primary_key=True)
-    description = Column(String, nullable=False)
-    completed = Column(Boolean, nullable=False, default=False)
-    id_user = Column(Integer, ForeignKey('user.id'))
-    user = relationship('User', back_populates='todos')
+    id: Mapped[int] = mapped_column(primary_key=True)
+    description: Mapped[str]
+    completed: Mapped[bool]
 
-    def __repr__(self) -> str:
-        return f'<Todo description: {self.description},  completed: {self.completed}>'
+    id_user: Mapped[int] = mapped_column(ForeignKey('user.id'))
+    user: Mapped['User'] = relationship(back_populates='todos')
 
 
-class DataBase:
-    def __init__(self, db_name: str) -> None:
-        """This class will configure our database."""
-        engine = create_engine(f'sqlite:///{db_name}')
-        Base.metadata.create_all(engine)
-        Session = sessionmaker(engine)
-        self.session = Session()
-        self.create_default_user()
+def get_session() -> Session:
+    settings = Settings()
+    engine = create_engine(settings.DATABASE_URL)
+    Base.metadata.create_all(engine)
+    with Session(engine) as session:
+        return session
 
-    def create_default_user(self) -> None:
-        username = constants.DEFAULT_USERNAME
-        password = constants.DEFAULT_PASSWORD
-        if not self.filter_users(username=username):
-            user = User(username=username, password=password)
-            self.insert_user(user)
 
-    def insert_user(self, user: 'User') -> None:
-        if user.username is None:
-            raise RequiredField('username')
+def get_current_id_user() -> int:
+    return current_id_user
 
-        elif user.password is None:
-            raise RequiredField('password')
-
-        elif self.filter_users(username=user.username):
-            raise AlreadyRegistered('username')
-
-        self.session.add(user)
-        self.session.commit()
-
-    def insert_todo(self, todo: 'Todo') -> None:
-        if todo.description is None:
-            raise RequiredField('description')
-
-        self.session.add(todo)
-        self.session.commit()
-
-    def update_todo(self, todo: 'Todo') -> None:
-        if todo.description is None:
-            raise RequiredField('description')
-
-        if todo.completed is None:
-            raise RequiredField('completed')
-
-        self.session.commit()
-
-    def delete_user(self, user: 'User') -> None:
-        self.session.delete(user)
-        self.session.commit()
-
-    def delete_todo(self, todo: 'Todo') -> None:
-        self.session.delete(todo)
-        self.session.commit()
-
-    def select_users(self) -> List['User']:
-        return self.session.query(User).all()
-
-    def select_todos(self) -> List['Todo']:
-        return self.session.query(Todo).all()
-
-    def select_user_by_id(self, id: int) -> Optional['User']:
-        return self.session.query(User).filter(User.id == id).first()
-
-    def select_todo_by_id(self, id: int) -> Optional['Todo']:
-        return self.session.query(Todo).filter(Todo.id == id).first()
-
-    def filter_users(self, **values) -> List['User']:
-        return self.session.query(User).filter_by(**values).all()
-
-    def filter_todos(self, **values) -> List['Todo']:
-        return self.session.query(Todo).filter_by(**values).all()
-
-    def register_user(
-        self, username: Optional[str], password: Optional[str]
-    ) -> 'User':
-        if username is None:
-            raise RequiredField('username')
-
-        if password is None:
-            raise RequiredField('password')
-
-        if self.filter_users(username=username):
-            raise AlreadyRegistered('username')
-
-        user = User(username=username, password=password)
-        self.insert_user(user)
-
-        return user
-
-    def login_user(
-        self, username: Optional[str], password: Optional[str]
-    ) -> 'User':
-        if username is None:
-            raise RequiredField('username')
-
-        if password is None:
-            raise RequiredField('password')
-
-        users = self.filter_users(username=username, password=password)
-        if not users:
-            raise NotRegistered('Invalid username or password')
-        else:
-            return users[0]
-
-    def register_todo(
-        self,
-        description: Optional[str],
-        completed: Optional[bool],
-        id_user: Optional[int],
-    ) -> 'Todo':
-        if description is None:
-            raise RequiredField('description')
-
-        if completed is None:
-            raise RequiredField('completed')
-
-        if id_user is None:
-            raise RequiredField('id_user')
-
-        todo = Todo(
-            description=description, completed=completed, id_user=id_user
-        )
-        self.insert_todo(todo)
-
-        return todo
+def set_current_id_user(id_user: int) -> None:
+    global current_id_user
+    current_id_user = id_user

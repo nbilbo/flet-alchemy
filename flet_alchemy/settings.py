@@ -1,0 +1,4 @@
+class Settings:
+    DATABASE_URL = 'sqlite:///database.db'
+    DEFAULT_USERNAME = 'admin'
+    DEFAULT_PASSWORD = 'admin'
