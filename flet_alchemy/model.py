@@ -9,7 +9,7 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Session
 
-from flet_alchemy.settings import Settings
+from flet_alchemy.config import settings
 
 current_id_user: Optional[int] = None
 
@@ -40,7 +40,6 @@ class Todo(Base):
 
 
 def get_session() -> Session:
-    settings = Settings()
     engine = create_engine(settings.DATABASE_URL)
     Base.metadata.create_all(engine)
     with Session(engine) as session:
@@ -49,6 +48,7 @@ def get_session() -> Session:
 
 def get_current_id_user() -> int:
     return current_id_user
+
 
 def set_current_id_user(id_user: int) -> None:
     global current_id_user

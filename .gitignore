@@ -161,3 +161,6 @@ cython_debug/
 
 # flet-alchemy
 database.db
+
+# Ignore dynaconf secret files
+.secrets.*

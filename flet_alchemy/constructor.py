@@ -7,6 +7,7 @@ from flet_alchemy.application import HomeView
 from flet_alchemy.application import LoginUserView
 from flet_alchemy.application import RegisterUserView
 from flet_alchemy.application import TodoPreview
+from flet_alchemy.config import settings
 from flet_alchemy.controller import DeleteTodoController 
 from flet_alchemy.controller import LoginUserController
 from flet_alchemy.controller import RegisterTodoController
@@ -17,7 +18,6 @@ from flet_alchemy.controller import QueryUserController
 from flet_alchemy.controller import ToggleTodoController
 from flet_alchemy.model import get_current_id_user
 from flet_alchemy.model import set_current_id_user 
-from flet_alchemy.settings import Settings
 
 
 class Constructor:
@@ -266,7 +266,6 @@ class Constructor:
         self.refresh_incompleted_todos()
 
     def create_default_user(self) -> None:
-        settings = Settings()
         username = settings.DEFAULT_USERNAME
         password = settings.DEFAULT_PASSWORD
 
