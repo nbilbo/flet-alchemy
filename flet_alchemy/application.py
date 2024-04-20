@@ -48,14 +48,7 @@ class GeneralAppBar(ft.AppBar):
 
         self.username = ft.Text()
         self.username.theme_style = ft.TextThemeStyle.LABEL_LARGE
-        self.username.value = 'username'
-
-        self.logout_button = ft.TextButton()
-        self.logout_button.text = 'Logout'
-        self.logout_button.icon = ft.icons.LOGOUT
-
-        self.toggle_theme_button = ft.IconButton()
-        self.toggle_theme_button.icon = ft.icons.DARK_MODE
+        self.username.value = ''
 
         self.about_button = ft.PopupMenuItem()
         self.about_button.icon = ft.icons.INFO
@@ -76,6 +69,45 @@ class GeneralAppBar(ft.AppBar):
 
         self.actions.append(ft.Row([ft.Icon(ft.icons.FACE), self.username]))
         self.actions.append(self.pop_menu)
+
+
+class AboutDialog(ft.AlertDialog):
+    def __init__(self, page: ft.Page) -> None:
+        super().__init__()
+        title = ft.Text()
+        title.value = 'Flet Alchemy'
+        title.theme_style = ft.TextThemeStyle.TITLE_LARGE
+        title.text_align = ft.TextAlign.CENTER
+        title.expand = True
+
+        close_button = ft.FloatingActionButton()
+        close_button.icon = ft.icons.CLOSE
+        close_button.bgcolor = ft.colors.RED
+        close_button.tooltip = 'Close'
+        close_button.on_click = lambda _event: page.close_dialog()
+
+        messages = [
+            'Flet-Alchemy is a program for registering user tasks.',
+            'Each user has their own tasks that can be viewed, updated, and deleted.',
+            'The program also includes an authentication screen, registration screen, and home screen.'
+        ]
+        
+        content = ft.Column()
+        content.controls.append(ft.Row([close_button], alignment=ft.MainAxisAlignment.END))
+        content.controls.append(ft.Row([title]))
+        content.scroll = ft.ScrollMode.AUTO
+
+        for message in messages:
+            text = ft.Text()
+            text.value = message
+            text.text_align = ft.TextAlign.CENTER
+            text.theme_style = ft.TextThemeStyle.LABEL_LARGE
+            text.theme_style = ft.TextThemeStyle.BODY_LARGE
+            text.selectable = True
+            text.expand = True
+            content.controls.append(ft.Row([text]))
+
+        self.content = content
 
 
 class AuthView(ft.View):
@@ -352,6 +384,10 @@ class Application:
     def show_info_snack_bar(self, message: str) -> None:
         snack = InfoSnackBar(message)
         self.page.show_snack_bar(snack)
+
+    def show_about_dialog(self) -> None:
+        dialog = AboutDialog(self.page)
+        self.page.show_dialog(dialog)
 
     def close_banner(self) -> None:
         self.page.close_banner()

@@ -65,6 +65,9 @@ class Constructor:
         appbar_logout_button = view.appbar.logout_button
         appbar_logout_button.on_click = self.handle_logout
 
+        appbar_about_button = view.appbar.about_button
+        appbar_about_button.on_click = self.handle_show_about_dialog
+
     def bind_home_view(self, view: HomeView) -> None:
         register_button = view.register_button
         register_button.on_click = self.handle_register_todo
@@ -104,6 +107,9 @@ class Constructor:
 
     def handle_toggle_theme_mode(self, _event: ft.ControlEvent) -> None:
         self.application.toggle_theme_mode()
+
+    def handle_show_about_dialog(self, _event: ft.ControlEvent) -> None:
+        self.application.show_about_dialog()
 
     def handle_register_user(self, _event: ft.ControlEvent) -> None:
         self.application.clear_register_user_error_text()
@@ -171,6 +177,7 @@ class Constructor:
         if response.get('success'):
             username = response['message']['username']
             password = response['message']['password']
+            self.application.set_appbar_username('')
             self.application.set_login_user_values(username=username, password=password)
             set_current_id_user(None)
 
