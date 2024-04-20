@@ -46,6 +46,10 @@ class GeneralAppBar(ft.AppBar):
         self.title = ft.Text()
         self.title.value = 'Flet Alchemy'
 
+        self.username = ft.Text()
+        self.username.theme_style = ft.TextThemeStyle.LABEL_LARGE
+        self.username.value = 'username'
+
         self.logout_button = ft.TextButton()
         self.logout_button.text = 'Logout'
         self.logout_button.icon = ft.icons.LOGOUT
@@ -53,8 +57,25 @@ class GeneralAppBar(ft.AppBar):
         self.toggle_theme_button = ft.IconButton()
         self.toggle_theme_button.icon = ft.icons.DARK_MODE
 
-        self.actions.append(self.logout_button)
-        self.actions.append(self.toggle_theme_button)
+        self.about_button = ft.PopupMenuItem()
+        self.about_button.icon = ft.icons.INFO
+        self.about_button.text = 'About'
+
+        self.logout_button = ft.PopupMenuItem()
+        self.logout_button.icon = ft.icons.LOGOUT
+        self.logout_button.text = 'Logout'
+
+        self.toggle_theme_button = ft.PopupMenuItem()
+        self.toggle_theme_button.icon = ft.icons.DARK_MODE
+        self.toggle_theme_button.text = 'Theme'
+
+        self.pop_menu = ft.PopupMenuButton()
+        self.pop_menu.items.append(self.toggle_theme_button)
+        self.pop_menu.items.append(self.about_button)
+        self.pop_menu.items.append(self.logout_button)
+
+        self.actions.append(ft.Row([ft.Icon(ft.icons.FACE), self.username]))
+        self.actions.append(self.pop_menu)
 
 
 class AuthView(ft.View):
@@ -301,6 +322,7 @@ class Application:
 
         for view in self.general_views:
             view.appbar.toggle_theme_button.icon = ft.icons.LIGHT_MODE
+            view.appbar.toggle_theme_button.text = 'Light'
 
         self.page.theme_mode = ft.ThemeMode.DARK
         self.page.update()
@@ -311,6 +333,7 @@ class Application:
 
         for view in self.general_views:
             view.appbar.toggle_theme_button.icon = ft.icons.DARK_MODE
+            view.appbar.toggle_theme_button.text = 'Dark'
 
         self.page.theme_mode = ft.ThemeMode.LIGHT
         self.page.update()
@@ -413,6 +436,11 @@ class Application:
 
     def get_todos(self) -> List[TodoPreview]:
         return self.get_completed_todos() + self.get_incompleted_todos()
+    
+    def set_appbar_username(self, username: str) -> None:
+        for view in self.general_views:
+            view.appbar.username.value = username
+        self.page.update()
 
     def set_login_user_error_text(self, message: str, field: str) -> None:
         fields = self.__get_login_user_fields()

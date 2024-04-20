@@ -121,6 +121,7 @@ class Constructor:
             self.application.clear_auth_views()
             self.application.clear_general_views()
             self.application.show_info_snack_bar('Welcome')
+            self.application.set_appbar_username(response['message']['username'])
             self.refresh_todos()
 
         else:
@@ -149,6 +150,7 @@ class Constructor:
             self.application.clear_auth_views()
             self.application.clear_general_views()
             self.application.show_info_snack_bar('Welcome')
+            self.application.set_appbar_username(response['message']['username'])
             self.refresh_todos()
 
         else:
