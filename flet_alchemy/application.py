@@ -558,3 +558,8 @@ class Application:
 
         elif template_route.match(self.home_view.route):
             self.page.views.append(self.home_view)
+        
+        # https://flet.dev/blog/navigation-and-routing/#page-route
+        # page.go is not calling update ?
+        # flet==0.22.0
+        self.page.update()
