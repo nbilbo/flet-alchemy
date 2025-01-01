@@ -1,19 +1,11 @@
-[tool.poetry]
+[project]
 name = "flet-alchemy"
 version = "0.1.0"
-description = ""
-authors = ["nbilbo"]
-license = "MIT"
+description = "Add your description here"
 readme = "README.md"
-package-mode = false
-
-[tool.poetry.dependencies]
-python = "^3.10"
-flet = "^0.22.0"
-dynaconf = "^3.2.5"
-sqlalchemy = "^2.0.29"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires-python = ">=3.10"
+dependencies = [
+    "dynaconf>=3.2.6",
+    "flet[all]>=0.25.2",
+    "sqlalchemy>=2.0.36",
+]

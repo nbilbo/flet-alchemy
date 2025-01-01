@@ -14,21 +14,21 @@ class AuthAppBar(ft.AppBar):
         self.toolbar_height = 75
 
         self.leading = ft.IconButton()
-        self.leading.icon = ft.icons.SCIENCE
+        self.leading.icon = ft.Icons.SCIENCE
 
         self.title = ft.Text()
         self.title.value = 'Flet Alchemy'
 
         self.toggle_theme_button = ft.IconButton()
-        self.toggle_theme_button.icon = ft.icons.DARK_MODE
+        self.toggle_theme_button.icon = ft.Icons.DARK_MODE
 
         self.login_button = ft.TextButton()
         self.login_button.text = 'Login'
-        self.login_button.icon = ft.icons.LOGIN_OUTLINED
+        self.login_button.icon = ft.Icons.LOGIN_OUTLINED
 
         self.register_button = ft.TextButton()
         self.register_button.text = 'Register'
-        self.register_button.icon = ft.icons.EDIT_OUTLINED
+        self.register_button.icon = ft.Icons.EDIT_OUTLINED
 
         self.actions.append(self.login_button)
         self.actions.append(self.register_button)
@@ -41,7 +41,7 @@ class GeneralAppBar(ft.AppBar):
         self.toolbar_height = 75
 
         self.leading = ft.IconButton()
-        self.leading.icon = ft.icons.SCIENCE
+        self.leading.icon = ft.Icons.SCIENCE
 
         self.title = ft.Text()
         self.title.value = 'Flet Alchemy'
@@ -51,15 +51,15 @@ class GeneralAppBar(ft.AppBar):
         self.username.value = ''
 
         self.about_button = ft.PopupMenuItem()
-        self.about_button.icon = ft.icons.INFO
+        self.about_button.icon = ft.Icons.INFO
         self.about_button.text = 'About'
 
         self.logout_button = ft.PopupMenuItem()
-        self.logout_button.icon = ft.icons.LOGOUT
+        self.logout_button.icon = ft.Icons.LOGOUT
         self.logout_button.text = 'Logout'
 
         self.toggle_theme_button = ft.PopupMenuItem()
-        self.toggle_theme_button.icon = ft.icons.DARK_MODE
+        self.toggle_theme_button.icon = ft.Icons.DARK_MODE
         self.toggle_theme_button.text = 'Theme'
 
         self.pop_menu = ft.PopupMenuButton()
@@ -67,7 +67,7 @@ class GeneralAppBar(ft.AppBar):
         self.pop_menu.items.append(self.about_button)
         self.pop_menu.items.append(self.logout_button)
 
-        self.actions.append(ft.Row([ft.Icon(ft.icons.FACE), self.username]))
+        self.actions.append(ft.Row([ft.Icon(ft.Icons.FACE), self.username]))
         self.actions.append(self.pop_menu)
 
 
@@ -81,10 +81,10 @@ class AboutDialog(ft.AlertDialog):
         title.expand = True
 
         close_button = ft.FloatingActionButton()
-        close_button.icon = ft.icons.CLOSE
-        close_button.bgcolor = ft.colors.RED
+        close_button.icon = ft.Icons.CLOSE
+        close_button.bgcolor = ft.Colors.RED
         close_button.tooltip = 'Close'
-        close_button.on_click = lambda _event: page.close_dialog()
+        close_button.on_click = lambda _event: page.close(self)
 
         messages = [
             'Flet-Alchemy is a program for registering user tasks.',
@@ -125,7 +125,7 @@ class AuthView(ft.View):
         self.content.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
         self.container = ft.Container(self.content)
-        self.container.border = ft.border.all(5, ft.colors.TRANSPARENT)
+        self.container.border = ft.border.all(5, ft.Colors.TRANSPARENT)
         self.container.width = 600
         self.controls.append(self.container)
 
@@ -139,7 +139,7 @@ class GeneralView(ft.View):
 
         self.container = ft.Container(self.content)
         self.container.width = 600
-        self.container.border = ft.border.all(5, ft.colors.TRANSPARENT)
+        self.container.border = ft.border.all(5, ft.Colors.TRANSPARENT)
         self.container.expand = True
         self.controls.append(self.container)
 
@@ -148,7 +148,7 @@ class LoginUserView(AuthView):
     def __init__(self) -> None:
         super().__init__()
         self.route = '/auth/login'
-        self.appbar.login_button.icon = ft.icons.LOGIN
+        self.appbar.login_button.icon = ft.Icons.LOGIN
         self.title.value = 'Login'
 
         self.username_field = ft.TextField()
@@ -179,7 +179,7 @@ class RegisterUserView(AuthView):
     def __init__(self) -> None:
         super().__init__()
         self.route = '/auth/register'
-        self.appbar.register_button.icon = ft.icons.EDIT
+        self.appbar.register_button.icon = ft.Icons.EDIT
         self.title.value = 'Register'
 
         self.username_field = ft.TextField()
@@ -216,7 +216,7 @@ class HomeView(GeneralView):
         self.description_field.expand = True
 
         self.register_button = ft.FloatingActionButton()
-        self.register_button.icon = ft.icons.ADD
+        self.register_button.icon = ft.Icons.ADD
 
         self.incompleted_tab = IncompletedTab()
         self.completed_tab = CompletedTab()
@@ -235,7 +235,7 @@ class IncompletedTab(ft.Tab):
     def __init__(self) -> None:
         super().__init__()
         self.text = 'Incompleted'
-        self.icon = ft.icons.CHECK_BOX_OUTLINE_BLANK
+        self.icon = ft.Icons.CHECK_BOX_OUTLINE_BLANK
 
         self.list_view = ft.ListView()
         self.list_view.spacing = 25
@@ -246,7 +246,7 @@ class CompletedTab(ft.Tab):
     def __init__(self) -> None:
         super().__init__()
         self.text = 'Completed'
-        self.icon = ft.icons.CHECK_BOX_OUTLINED
+        self.icon = ft.Icons.CHECK_BOX_OUTLINED
 
         self.list_view = ft.ListView()
         self.list_view.spacing = 25
@@ -264,11 +264,11 @@ class TodoPreview(ft.UserControl):
         self.description.expand = True
 
         self.toggle_completed_button = ft.IconButton()
-        self.toggle_completed_button.icon = ft.icons.CHECK_BOX
+        self.toggle_completed_button.icon = ft.Icons.CHECK_BOX
 
         self.delete_button = ft.IconButton()
-        self.delete_button.icon = ft.icons.DELETE
-        self.delete_button.icon_color = ft.colors.RED
+        self.delete_button.icon = ft.Icons.DELETE
+        self.delete_button.icon_color = ft.Colors.RED
         
         self.content = ft.Column()
         self.content.controls.append(ft.Row([self.delete_button, self.description, self.toggle_completed_button]))
@@ -288,12 +288,12 @@ class WarningBanner(ft.Banner):
         self.message.expand = True
 
         self.icon = ft.Icon()
-        self.icon.name = ft.icons.WARNING
+        self.icon.name = ft.Icons.WARNING
 
         self.close_button = ft.TextButton()
         self.close_button.text = 'Close'
-        self.close_button.icon = ft.icons.CLOSE
-        self.close_button.on_click = lambda _event: page.close_banner()
+        self.close_button.icon = ft.Icons.CLOSE
+        self.close_button.on_click = lambda _event: page.close(self)
 
         self.content = ft.Column()
         self.content.controls.append(ft.Row([self.icon, self.message]))
@@ -303,7 +303,7 @@ class WarningBanner(ft.Banner):
 class InfoSnackBar(ft.SnackBar):
     def __init__(self, message: str) -> None:
         super().__init__(content=ft.Row())
-        self.bgcolor = ft.colors.TRANSPARENT
+        self.bgcolor = ft.Colors.TRANSPARENT
 
         self.message = ft.Text()
         self.message.value = message
@@ -311,7 +311,7 @@ class InfoSnackBar(ft.SnackBar):
         self.message.expand = True
 
         self.icon = ft.Icon()
-        self.icon.name = ft.icons.INFO
+        self.icon.name = ft.Icons.INFO
 
         self.content.controls.append(self.icon)
         self.content.controls.append(self.message)
@@ -319,9 +319,13 @@ class InfoSnackBar(ft.SnackBar):
 
 class Application:
     def __init__(self, page: ft.Page) -> None:
+        self.snackbar: Optional[ft.SnackBar] = None
+        self.dialog: Optional[ft.AlertDialog] = None
+        self.banner: Optional[ft.Banner] = None
+
         self.page = page
         self.page.on_route_change = self.__route_change
-        self.page.window_width = self.page.window_height = 500
+        self.page.window.width = self.page.window.height = 500
         self.page.title = 'Flet Alchemy'
         
         self.home_view = HomeView()
@@ -350,10 +354,10 @@ class Application:
 
     def active_dark_theme_mode(self) -> None:
         for view in self.auth_views:
-            view.appbar.toggle_theme_button.icon = ft.icons.LIGHT_MODE
+            view.appbar.toggle_theme_button.icon = ft.Icons.LIGHT_MODE
 
         for view in self.general_views:
-            view.appbar.toggle_theme_button.icon = ft.icons.LIGHT_MODE
+            view.appbar.toggle_theme_button.icon = ft.Icons.LIGHT_MODE
             view.appbar.toggle_theme_button.text = 'Light'
 
         self.page.theme_mode = ft.ThemeMode.DARK
@@ -361,10 +365,10 @@ class Application:
 
     def active_light_theme_mode(self) -> None:
         for view in self.auth_views:
-            view.appbar.toggle_theme_button.icon = ft.icons.DARK_MODE
+            view.appbar.toggle_theme_button.icon = ft.Icons.DARK_MODE
 
         for view in self.general_views:
-            view.appbar.toggle_theme_button.icon = ft.icons.DARK_MODE
+            view.appbar.toggle_theme_button.icon = ft.Icons.DARK_MODE
             view.appbar.toggle_theme_button.text = 'Dark'
 
         self.page.theme_mode = ft.ThemeMode.LIGHT
@@ -378,19 +382,21 @@ class Application:
                 self.active_dark_theme_mode()
 
     def show_warning_banner(self, message: str) -> None:
-        banner = WarningBanner(self.page, message)
-        self.page.show_banner(banner)
+        self.banner = WarningBanner(self.page, message)
+        self.page.open(self.banner)
 
     def show_info_snack_bar(self, message: str) -> None:
-        snack = InfoSnackBar(message)
-        self.page.show_snack_bar(snack)
+        self.snackbar = InfoSnackBar(message)
+        self.page.open(self.snackbar)
 
     def show_about_dialog(self) -> None:
-        dialog = AboutDialog(self.page)
-        self.page.show_dialog(dialog)
+        self.dialog = AboutDialog(self.page)
+        self.page.open(self.dialog)
 
     def close_banner(self) -> None:
-        self.page.close_banner()
+        if self.banner is not None:
+            self.page.close(self.banner)
+            self.banner = None
 
     def clear_login_user_error_text(self) -> None:
         for field in self.__get_login_user_fields().values():
@@ -504,8 +510,8 @@ class Application:
             preview = TodoPreview()
             preview.id_todo = todo.id
             preview.description.value = todo.description
-            preview.toggle_completed_button.icon = ft.icons.CHECK_BOX_OUTLINED
-            preview.toggle_completed_button.icon_color = ft.colors.AMBER
+            preview.toggle_completed_button.icon = ft.Icons.CHECK_BOX_OUTLINED
+            preview.toggle_completed_button.icon_color = ft.Colors.AMBER
             list_view.controls.append(preview)
 
         self.page.update()
@@ -518,8 +524,8 @@ class Application:
             preview = TodoPreview()
             preview.id_todo = todo.id
             preview.description.value = todo.description
-            preview.toggle_completed_button.icon = ft.icons.CHECK_BOX_OUTLINE_BLANK
-            preview.toggle_completed_button.icon_color = ft.colors.GREEN
+            preview.toggle_completed_button.icon = ft.Icons.CHECK_BOX_OUTLINE_BLANK
+            preview.toggle_completed_button.icon_color = ft.Colors.GREEN
             list_view.controls.append(preview)
 
         self.page.update()
@@ -559,7 +565,4 @@ class Application:
         elif template_route.match(self.home_view.route):
             self.page.views.append(self.home_view)
         
-        # https://flet.dev/blog/navigation-and-routing/#page-route
-        # page.go is not calling update ?
-        # flet==0.22.0
         self.page.update()
