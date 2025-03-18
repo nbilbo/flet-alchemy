@@ -253,7 +253,7 @@ class CompletedTab(ft.Tab):
         self.content = self.list_view
 
 
-class TodoPreview(ft.UserControl):
+class TodoPreview(ft.Container):
     def __init__(self) -> None:
         super().__init__()
         self.id_todo: Optional[int] = None
@@ -270,12 +270,9 @@ class TodoPreview(ft.UserControl):
         self.delete_button.icon = ft.Icons.DELETE
         self.delete_button.icon_color = ft.Colors.RED
         
-        self.content = ft.Column()
-        self.content.controls.append(ft.Row([self.delete_button, self.description, self.toggle_completed_button]))
-        self.container = ft.Container(self.content)
-
-    def build(self) -> ft.Container:
-        return self.container
+        column = ft.Column()
+        column.controls.append(ft.Row([self.delete_button, self.description, self.toggle_completed_button]))
+        self.content = column
 
 
 class WarningBanner(ft.Banner):
